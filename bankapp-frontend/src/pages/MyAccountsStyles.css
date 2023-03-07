@@ -1,0 +1,143 @@
+.buttonDiv {
+    width: 400px;
+
+}
+
+.buttonContent {
+    align-items: left;
+}
+
+.wrapper {
+    background-color: var(--back);
+    width: 100%;
+    height: 100%;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* Zebra striping */
+tr:nth-of-type(odd) {
+    background: #eee;
+}
+
+tr:nth-of-type(even) {
+    background: #b3b3b1;
+}
+
+table th,
+table td {
+    padding: 8px;
+    text-align: center;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+table td::before {
+    
+    float: left;
+    
+}
+
+.button {
+    background-color: #4CAF50;
+    /* Green */
+    border: none;
+    color: white;
+    padding: 3px 3px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.button1:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+}
+
+.button1 {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button2:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+}
+
+.button2 {
+    background-color: #008CBA;
+    color: white;
+}
+
+/* .button6:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid #2050e2;
+} */
+
+.button6 {
+    background-color: #2050e2;
+    color: white;
+    border: 1px solid #2050e2;
+}
+
+.button5:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+}
+
+.button5 {
+    background-color: #555555;
+    color: white;
+}
+
+@media (max-width: 767px) {
+    .buttonDiv {
+        width: 200px;
+    }
+    
+    table {
+        display: block;
+        width: 100%;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tbody,
+    tr,
+    td {
+        display: block;
+        width: 100%;
+    }
+
+    td::before {
+        display: inline-block;
+        float: left;
+        content: attr(data-label);
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-right: 10px;
+    }
+}
