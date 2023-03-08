@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +17,7 @@ public class TransactionModel implements TransactionSet {
     private Long id;
     private TransType type;
     private BigDecimal amount;
-    private Date transactionDate;
+    private LocalDateTime transactiondate;
     private String description;
     private Long fromAccount;
     private Long toAccount;
@@ -28,7 +28,7 @@ public class TransactionModel implements TransactionSet {
                 "id=" + id +
                 ", type=" + type +
                 ", amount=" + amount +
-                ", transactiondate=" + transactionDate +
+                ", transactiondate=" + transactiondate +
                 ", description='" + description + '\'' +
                 ", fromaccount=" + fromAccount +
                 ", toaccount=" + toAccount +

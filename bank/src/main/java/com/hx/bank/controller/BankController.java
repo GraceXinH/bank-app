@@ -61,7 +61,7 @@ public class BankController {
     }
 
     @GetMapping("/transaction/account/{accountId}")
-    public List<Transaction> displayTransactionsByAccountId(@PathVariable Long accountId) {
+    public List<TransactionModel> displayTransactionsByAccountId(@PathVariable Long accountId) {
 
         return service.displayTransactionsByAccountId(accountId);
     }
@@ -72,4 +72,11 @@ public class BankController {
 
         return service.displayTransactionsByAccountId(accountId, page, size);
     }
+
+    @GetMapping("/greeting")
+    public String sayHello() {
+
+        return "Hello";
+    }
+
 }

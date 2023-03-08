@@ -33,7 +33,7 @@ public class Account {
     @Column(nullable = false, length = 20)
     private String name;
     @Column(unique=true, nullable = false)
-    private String number;
+    private Long number;
     @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
     private AccountType type;

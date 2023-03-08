@@ -37,7 +37,7 @@ class AccountRepositoryTest {
         Account account = new Account();
         account.setUser(user);
         account.setName("check1");
-        account.setNumber("3722 8641-001");
+        account.setNumber(8641001L);
         account.setType(AccountType.CHEQUING);
         account.setBalance(new BigDecimal("0"));
         account.setOpendate(new Date());

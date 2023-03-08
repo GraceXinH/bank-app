@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -82,7 +84,7 @@ class BankControllerTest {
                 .id(1L)
                 .name("check1")
                 .balance(new BigDecimal(0))
-                .number("3722 5673-001")
+                .number(5673001L)
                 .type(AccountType.CHEQUING)
                 .opendate(new Date())
                 .status(Status.ACTIVE)
@@ -97,7 +99,7 @@ class BankControllerTest {
                                         "id": 1
                                     },
                                                         
-                                    "type": "CHECK",
+                                    "type": "CHEQUING",
                                     "opendate": "2023-01-03 10:20:00"
                                 }
                                 """)
@@ -114,7 +116,7 @@ class BankControllerTest {
                 .id(1L)
                 .name("check1")
                 .balance(new BigDecimal(0))
-                .number("3722 5673-001")
+                .number(5673001L)
                 .balance(new BigDecimal(20))
                 .type(AccountType.CHEQUING)
                 .opendate(new Date())
@@ -125,7 +127,7 @@ class BankControllerTest {
                 .id(1L)
                 .name("check1")
                 .balance(new BigDecimal(0))
-                .number("3722 5673-001")
+                .number(5673001L)
                 .balance(new BigDecimal(70))
                 .type(AccountType.CHEQUING)
                 .opendate(new Date())
@@ -138,7 +140,7 @@ class BankControllerTest {
         transaction.setFromaccount(account);
         transaction.setType(TransType.DEPOSIT);
         transaction.setAmount(new BigDecimal(50));
-        transaction.setTransactiondate(new Date());
+        transaction.setTransactiondate(LocalDateTime.now());
         transaction.setDescription("From counter.");
         Mockito.when(transactionRepository.save(transaction)).thenReturn(transaction);
 

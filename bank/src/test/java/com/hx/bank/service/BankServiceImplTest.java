@@ -86,14 +86,14 @@ class BankServiceImplTest {
         Account account1 = Account.builder()
                 .id(1L)
                 .name("check1")
-                .number("3722 5673-001")
+                .number(5673001L)
                 .balance(new BigDecimal(0))
                 .type(AccountType.CHEQUING)
                 .status(Status.ACTIVE)
                 .opendate(new Date())
                 .user(user)
                 .build();
-        Mockito.when(accountRepository.save(account1)).thenReturn(account1);
+        Mockito.when(accountRepository.save(account)).thenReturn(account1);
         Mockito.when(accountRepository.countByUserAndType(user.getId(), AccountType.CHEQUING.name()))
                 .thenReturn(0L);
         Mockito.when(accountRepository.getMaxId()).thenReturn(0L);
@@ -137,7 +137,7 @@ class BankServiceImplTest {
         Account fromAccount = Account.builder()
                 .id(1L)
                 .name("check1")
-                .number("3722 5673-001")
+                .number(5673001L)
                 .balance(new BigDecimal(120))
                 .type(AccountType.CHEQUING)
                 .status(Status.ACTIVE)
@@ -147,7 +147,7 @@ class BankServiceImplTest {
         Account toAccount = Account.builder()
                 .id(2L)
                 .name("saving1")
-                .number("3722 5673-002")
+                .number(5673002L)
                 .balance(new BigDecimal(0))
                 .type(AccountType.SAVING)
                 .status(Status.ACTIVE)
@@ -157,7 +157,7 @@ class BankServiceImplTest {
         Account otherAccount = Account.builder()
                 .id(2L)
                 .name("saving11")
-                .number("3722 5673-012")
+                .number(5673012L)
                 .balance(new BigDecimal(200))
                 .type(AccountType.SAVING)
                 .status(Status.ACTIVE)
@@ -181,7 +181,7 @@ class BankServiceImplTest {
                 .description("transfer money")
                 .type(TransType.TRANS)
                 .build();
-        Mockito.when(transactionRepository.save(transaction1)).thenReturn(transaction1);
+        Mockito.when(transactionRepository.save(transaction)).thenReturn(transaction1);
         Transaction result = bankService.transfer(transaction);
 
         assertEquals(transaction1, result);
@@ -220,7 +220,7 @@ class BankServiceImplTest {
         Account fromAccount = Account.builder()
                 .id(1L)
                 .name("check1")
-                .number("3722 5673-001")
+                .number(5673001L)
                 .balance(new BigDecimal(120))
                 .type(AccountType.CHEQUING)
                 .status(Status.ACTIVE)
@@ -230,7 +230,7 @@ class BankServiceImplTest {
         Account toAccount = Account.builder()
                 .id(2L)
                 .name("saving1")
-                .number("3722 5673-002")
+                .number(5673002L)
                 .balance(new BigDecimal(0))
                 .type(AccountType.SAVING)
                 .status(Status.ACTIVE)
@@ -240,7 +240,7 @@ class BankServiceImplTest {
         Account otherAccount = Account.builder()
                 .id(2L)
                 .name("saving11")
-                .number("3722 5673-012")
+                .number(5673012L)
                 .balance(new BigDecimal(200))
                 .type(AccountType.SAVING)
                 .status(Status.ACTIVE)
@@ -266,10 +266,11 @@ class BankServiceImplTest {
                 .build();
         List<Transaction> list = new ArrayList<>();
         list.add(transaction1);
-        Mockito.when(transactionRepository.findByFromaccount(fromAccount)).thenReturn(list);
-        List<Transaction> result = bankService.displayTransactionsByAccountId(1L);
+        Mockito.when(transactionRepository.findByFromaccountOrderByIdAsc(fromAccount)).thenReturn(list);
+        List<TransactionModel> result = bankService.displayTransactionsByAccountId(1L);
 
-        assertEquals(list, result);
+        assertEquals(list.size(), result.size());
+        assertEquals(fromAccount.getNumber(), result.get(0).getFromAccount());
 
     }
 
@@ -304,7 +305,7 @@ class BankServiceImplTest {
         Account fromAccount = Account.builder()
                 .id(1L)
                 .name("check1")
-                .number("3722 5673-001")
+                .number(5673001L)
                 .balance(new BigDecimal(120))
                 .type(AccountType.CHEQUING)
                 .status(Status.ACTIVE)

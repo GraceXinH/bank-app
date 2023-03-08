@@ -1,16 +1,16 @@
 package com.hx.bank.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public interface TransactionSet {
-    Integer getId();
+    Long getId();
     TransType getType();
     BigDecimal getAmount();
-    Date getTransactionDate();
+    LocalDateTime getTransactiondate();
     String getDescription();
-    Integer getFromAccount();
-    Integer getToAccount();
+    Long getFromAccount();
+    Long getToAccount();
 
 
     default String getString(){

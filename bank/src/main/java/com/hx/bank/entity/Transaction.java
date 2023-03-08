@@ -1,14 +1,13 @@
 package com.hx.bank.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hx.bank.entity.Account;
 import com.hx.bank.model.TransType;
 import lombok.*;
 
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static jakarta.persistence.FetchType.EAGER;
@@ -31,8 +30,8 @@ public class Transaction{
     @Column(nullable = false)
     private BigDecimal amount;
     @Column(nullable = false)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date transactiondate;
+    @JsonFormat  //(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime transactiondate;
     @Column(nullable = false, length = 100)
     private String description;
 

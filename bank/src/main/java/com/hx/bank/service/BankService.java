@@ -4,6 +4,7 @@ import com.hx.bank.entity.Account;
 import com.hx.bank.entity.Transaction;
 import com.hx.bank.entity.User;
 import com.hx.bank.model.Operation;
+import com.hx.bank.model.TransactionModel;
 import com.hx.bank.model.TransactionSet;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface BankService {
 
     Account displayAccountDetail(Long accountId);
 
-    List<Transaction> displayTransactionsByAccountId(Long accountId);
+    List<TransactionModel> displayTransactionsByAccountId(Long accountId);
 
     List<TransactionSet> displayTransactionsByAccountId(Long accountId, int page, int size);
 

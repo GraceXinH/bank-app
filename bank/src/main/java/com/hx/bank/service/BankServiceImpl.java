@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class BankServiceImpl implements BankService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
-    private final String BRANCHNO = "3722 5673-";
+    private final Long BRANCHNO = 5673L;
 
 
     private String currentUserLoginName() {
@@ -77,15 +79,8 @@ public class BankServiceImpl implements BankService {
             account.setName(account.getType().name().toLowerCase() +  n);
         n = accountRepository.getMaxId();
         n = getIncrementOne(n);
-        String num = "";
-        if (n < 10) {
-            num = "00" + n;
-        } else if (n < 100) {
-            num = "0" + n;
-        } else {
-            num = n.toString();
-        }
-        account.setNumber(BRANCHNO + num);
+
+        account.setNumber(BRANCHNO * 1000 + n);
     }
 
     private Long getIncrementOne(Long n) {
@@ -108,13 +103,14 @@ public class BankServiceImpl implements BankService {
             throw new FromIsSameAsToException();
 
         if (transaction.getAmount().compareTo(accountFrom.getBalance()) > 0) {
-            throw new BalanceLowException(accountFrom.getNumber());
+            throw new BalanceLowException(accountFrom.getNumber().toString());
         } else {
             accountFrom.setBalance(accountFrom.getBalance().subtract(transaction.getAmount()));
             accountTo.setBalance(accountTo.getBalance().add(transaction.getAmount()));
             accountRepository.save(accountFrom);
             accountRepository.save(accountTo);
         }
+        transaction.setTransactiondate(LocalDateTime.now());
         return transactionRepository.save(transaction);
     }
 
@@ -126,11 +122,29 @@ public class BankServiceImpl implements BankService {
 
     }
 
-    public List<Transaction> displayTransactionsByAccountId(Long accountId) {
+    public List<TransactionModel> displayTransactionsByAccountId(Long accountId) {
         Account account = accountRepository.findById(accountId).orElseThrow();
         if (!account.getUser().getLoginname().equals(currentUserLoginName()))
             throw new NoAccessException();
-        return transactionRepository.findByFromaccount(account);
+        Account toAccount = accountRepository.findById(accountId).orElseThrow();
+        List<Transaction> fromList = transactionRepository.findByFromaccountOrderByIdAsc(account);
+        List<Transaction> toList = transactionRepository.findByToaccountOrderByIdAsc(toAccount);
+        fromList.addAll(toList);
+        fromList.sort((obj, obj1) -> obj.getId().compareTo(obj1.getId()));
+        List<TransactionModel> result = new ArrayList<>();
+        for (Transaction obj : fromList) {
+            TransactionModel model = TransactionModel.builder()
+                    .id(obj.getId())
+                    .amount(obj.getAmount())
+                    .type(obj.getType())
+                    .transactiondate(obj.getTransactiondate())
+                    .fromAccount(obj.getFromaccount().getNumber())
+                    .toAccount(obj.getToaccount() != null ?obj.getToaccount().getNumber() : null)
+                    .description(obj.getDescription())
+                    .build();
+            result.add(model);
+        }
+        return result;
     }
 
     public List<TransactionSet> displayTransactionsByAccountId(Long accountId, int page, int size) {
@@ -138,7 +152,7 @@ public class BankServiceImpl implements BankService {
         if (!account.getUser().getLoginname().equals(currentUserLoginName()))
             throw new NoAccessException();
         Pageable paging = PageRequest.of(page, size);
-        return transactionRepository.findByFromaccount(account, paging);
+        return transactionRepository.retrieveTransactionsByAccountId(accountId, paging);
     }
 
     @Transactional
@@ -150,7 +164,7 @@ public class BankServiceImpl implements BankService {
 
         if (operation.getAction().equals(TransType.WITHDRAW)) {
             if (operation.getAmount().compareTo(account.getBalance()) > 0) {
-                throw new BalanceLowException(account.getNumber());
+                throw new BalanceLowException(account.getNumber().toString());
             }
             account.setBalance(account.getBalance().subtract(operation.getAmount()));
         } else if (operation.getAction().equals(TransType.DEPOSIT)) {
@@ -159,7 +173,7 @@ public class BankServiceImpl implements BankService {
         transaction.setFromaccount(account);
         transaction.setType(operation.getAction());
         transaction.setAmount(operation.getAmount());
-        transaction.setTransactiondate(new Date());
+        transaction.setTransactiondate(LocalDateTime.now());
         transaction.setDescription("From counter.");
         transactionRepository.save(transaction);
         accountRepository.save(account);
@@ -171,4 +185,5 @@ public class BankServiceImpl implements BankService {
     public String sayHello() {
         return "hello";
     }
+
 }

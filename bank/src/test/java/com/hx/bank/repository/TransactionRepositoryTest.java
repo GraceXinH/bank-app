@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -33,26 +35,26 @@ class TransactionRepositoryTest {
         Transaction transaction = new Transaction();
         transaction.setType(TransType.DEPOSIT);
         transaction.setAmount(new BigDecimal(30.0));
-        transaction.setTransactiondate(new Date());
+        transaction.setTransactiondate(LocalDateTime.now());
         transaction.setFromaccount(fromAccount);
         transaction.setToaccount(toAccount);
         transaction.setDescription("Deposit 30");
         transactionRepository.save(transaction);
 
-        List<Transaction> list = transactionRepository.findByFromaccount(fromAccount);
+        List<Transaction> list = transactionRepository.findByFromaccountOrderByIdAsc(fromAccount);
         assertTrue(list.size() == 1);
         assertTrue(list.contains(transaction));
 
         Transaction transaction2 = new Transaction();
         transaction2.setType(TransType.TRANS);
         transaction2.setAmount(new BigDecimal(50.0));
-        transaction2.setTransactiondate(new Date());
+        transaction2.setTransactiondate(LocalDateTime.now());
         transaction2.setFromaccount(fromAccount);
         transaction2.setToaccount(toAccount);
         transaction2.setDescription("Trans 50");
         transactionRepository.save(transaction2);
 
-        list = transactionRepository.findByFromaccount(fromAccount);
+        list = transactionRepository.findByFromaccountOrderByIdAsc(fromAccount);
         assertTrue(list.size() == 2);
         assertTrue(list.contains(transaction2));
 
