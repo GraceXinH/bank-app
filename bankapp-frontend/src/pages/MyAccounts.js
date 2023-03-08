@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { baseUrl, currentUser, currentToken, removeUser } from "../components/Helpers";
 import "./MyAccountsStyles.css";
+import Global from "../components/Global";
 
 
 const MyAccounts = () => {
@@ -23,20 +24,19 @@ const MyAccounts = () => {
     })
       .then((resp) => {
         lastStatus = resp.status;
-        if (lastStatus === 401) {
+        if (lastStatus === 401 || lastStatus === 403) {
           removeUser();
           throw new Error("The token maybe expired or invalid, please login again.");
-        } else {
-          return resp.json();
         }
-        
+        return resp.json();
+
       })
       .then((data) => {
         setAccounts(data);
 
       })
-      .catch((err) => {        
-        if (lastStatus === 401) {
+      .catch((err) => {
+        if (lastStatus === 401 || lastStatus === 403) {
           setMessage("The token maybe expired or invalid, please login again.")
           removeUser();
           return;
@@ -47,12 +47,12 @@ const MyAccounts = () => {
 
   };
 
-  const transactionRoute = (e)=>{
+  const transactionRoute = (e) => {
     let path = `/transaction/${e.currentTarget.dataset.id}`;
     navigate(path);
   }
 
-  const createAccountRoute = (e)=>{
+  const createAccountRoute = (e) => {
     let path = `/create`;
     navigate(path);
   }
@@ -122,49 +122,49 @@ const MyAccounts = () => {
   return (
     <Wrapper className="wrapper">
       <FormDiv>
-        <Form>          
-          <Mydiv>My Accounts</Mydiv>
+        <Form>
           <div className="buttonDiv">
             <div className="buttonContent">
-              <button className="button button6" onClick={createAccountRoute.bind(this)} >Open new Account</button>
+              <button className="button button2" onClick={createAccountRoute.bind(this)} >Open new</button>
             </div>
           </div>
+          <Mydiv>My Accounts</Mydiv>
           <div className="tableContainer">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">Number</th>
-                <th scope="col">Type</th>
-                <th scope="col">Balance</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {accounts != null && accounts.map((account, index) => (
-                <tr key={account.id}>
-                  <td data-label="ID">{index + 1}</td>
-                  <td data-label="Name">
-                    <Link to={`/accountDetail/${account.id}`} >{account.name}</Link>
-                  </td>
-                  <td data-label="Number">{account.number}</td>
-                  <td data-label="Type">{account.type}</td>
-                  <td data-label="Balance">{account.balance}</td>
-                  <td data-label="Actions">
-                    <button className="button button2" onClick={operation.bind(this)} data-id={account.id} data-action="DEPOSIT">Deposit</button>
-                    <button className="button button5" onClick={operation.bind(this)} data-id={account.id} data-action="WITHDRAW">Withdraw</button>
-                    <button className="button button5" onClick={transactionRoute.bind(this)} data-id={account.id} data-action="WITHDRAW">Transaction</button>
-
-                  </td>
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Number</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Balance</th>
+                  <th scope="col">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {accounts != null && accounts.map((account, index) => (
+                  <tr key={account.id}>
+                    <td data-label="ID">{index + 1}</td>
+                    <td data-label="Name">
+                      <Link to={`/accountDetail/${account.id}`} >{account.name}</Link>
+                    </td>
+                    <td data-label="Number">{account.number}</td>
+                    <td data-label="Type">{account.type}</td>
+                    <td data-label="Balance">{account.balance}</td>
+                    <td data-label="Actions">
+                      <button className="button button2" onClick={operation.bind(this)} data-id={account.id} data-action="DEPOSIT">Deposit</button>
+                      <button className="button button5" onClick={operation.bind(this)} data-id={account.id} data-action="WITHDRAW">Withdraw</button>
+                      <button className="button button5" onClick={transactionRoute.bind(this)} data-id={account.id} data-action="WITHDRAW">Transaction</button>
+
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           <MessageLabel> {message} </MessageLabel>
         </Form>
-      </FormDiv> 
+      </FormDiv>
     </Wrapper>
   )
 }

@@ -16,7 +16,7 @@ const Topbar = () => {
   }
 
   function sayHello() {
-    // console.log(expired);
+    console.log("expired: " + expired);
     console.log(localStorage.hasOwnProperty('userName'));
     if (!login) {
       return;

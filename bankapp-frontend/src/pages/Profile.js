@@ -10,7 +10,6 @@ const Profile = () => {
   const [password, setPassword] = useState(null);
   const [firstname, setFirstname] = useState();
   const [lastname, setLastname] = useState(null);
-  const [email, setEmail] = useState(null);
   const [address, setAddress] = useState(null);
   const [phone,setPhone] = useState(null);
   const [opendate,setOpendate] = useState(null);
@@ -41,7 +40,6 @@ const Profile = () => {
       setFirstname(data.firstname);
       setLastname(data.lastname);
       setPassword(data.password);
-      setEmail(data.email);
       setAddress(data.address);
       setPhone(data.phone);
       setOpendate(data.opendate);
@@ -81,8 +79,6 @@ const Profile = () => {
           <Label>First Name: {firstname != null ? firstname : ""}</Label>
           <br />
           <Label>Last Name: {lastname != null ? lastname : ""}</Label>
-          <br />
-          <Label>Email: {email != null ? email : ""}</Label>
           <br />
           <Label>Phone Number: {phone != null ? phone : ""}</Label>
           <br />

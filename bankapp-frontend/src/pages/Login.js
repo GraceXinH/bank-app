@@ -3,6 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import { baseUrl } from "../components/Helpers";
+import Global from "../components/Global";
 
 const Login = () => {
   const [loginname, setLoginname] = useState(

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import { baseUrl, currentToken } from "../components/Helpers";
+import { baseUrl, currentToken, removeUser } from "../components/Helpers";
 import "./TransactionStyles.css";
+import Global from "../components/Global";
 
 
 const Transactions=()=> {
@@ -16,8 +17,8 @@ const Transactions=()=> {
 
         var lastStatus;
         setMessage("");
-        
-        fetch(baseUrl() + `/api/transaction/account/${accountId}?page=0&size=10`, {
+
+        fetch(baseUrl() + `/api/transaction/account/${accountId}?page=0&size=100`, {
           "method": "GET",
           "timeout": 0,
           "headers": { 
@@ -26,16 +27,26 @@ const Transactions=()=> {
         })
         .then((resp) => {
           lastStatus = resp.status;
+          if (lastStatus===401 || lastStatus===403) {
+            setMessage("The token maybe is expired or invalid, please login again.")
+            Global.expired = true;
+            console.log("from trans: " + Global.expired);
+            removeUser();
+            return;
+          }
           return resp.json();
         })
         .then((data) => {
           setTransactions(data);
-    
+          // console.log(data);
         })
         .catch((err) => {
           console.log(err);
-          if (lastStatus===401) {
+          if (lastStatus===401 || lastStatus===403) {
             setMessage("The token maybe is expired or invalid, please login again.")
+            Global.expired = true;
+            console.log("from trans: " + Global.expired);
+            removeUser();
             return;
           }
           // console.log("we have a problem " + err.message);
@@ -44,6 +55,17 @@ const Transactions=()=> {
     
       };
     
+    const changeDate = (date) => {
+      if (date===null) return "-";
+      var index = date.indexOf(".");
+      if (index > 0) {
+        date = date.substring(0, index);
+      }
+      date = date.replace("T", " ");
+
+      return date;
+    }
+
       useEffect(() => {
         retrieveData();
       }, []);
@@ -61,9 +83,10 @@ const Transactions=()=> {
                 <th scope="col">Id</th>
                 <th scope="col">Type</th>
                 <th scope="col">Amount</th>
-                <th scope="col">Description</th>
+                <th scope="col">Date</th>
                 <th scope="col">From Account</th>
                 <th scope="col">To Account</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -72,10 +95,10 @@ const Transactions=()=> {
                   <td data-label="ID">{transaction.id}</td>
                   <td data-label="Type">{transaction.type}</td>
                   <td data-label="Amount">{transaction.amount}</td>
-                  <td data-label="Description">{transaction.description}</td>
+                  <td data-label="Date">{changeDate(transaction.transactiondate)}</td>
                   <td data-label="From">{transaction.fromAccount}</td>
                   <td data-label="To">{transaction.toAccount===null ? "-" : transaction.toAccount}</td>
-                  
+                  <td data-label="Description">{transaction.description}</td>
                 </tr>
               ))}
             </tbody>

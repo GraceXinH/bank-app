@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import { baseUrl, currentToken, currentUser, removeUser } from "../components/Helpers";
 import "./TransferStyles.css";
+import Global from "../components/Global";
 
 const Transfer = () => {
   const [message, setMessage] = useState(null);
