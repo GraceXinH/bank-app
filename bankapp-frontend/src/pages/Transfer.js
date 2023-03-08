@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import { baseUrl, currentToken, currentUser, removeUser } from "../components/Helpers";
 import "./TransferStyles.css";
-import Global from "../components/Global";
 
 const Transfer = () => {
   const [message, setMessage] = useState(null);
@@ -17,8 +16,6 @@ const Transfer = () => {
 
   useEffect(() => {
     var lastStatus;
-
-    console.log(baseUrl() + `/api/accounts/user/${currentUser()}`);
 
     if (currentUser()===null) {
       navigate("/");
@@ -36,12 +33,11 @@ const Transfer = () => {
         return res.json();
       })
       .then((result) => {
-        console.log(result);
         setFromAccounts(result);
         setToAccounts(result);
       })
       .catch((err) => {        
-        if (lastStatus === 401) {
+        if (lastStatus === 401 || lastStatus===403) {
           setMessage("The token maybe expired or invalid, please login again.")
           removeUser();
           // window.location = "/";
@@ -62,6 +58,11 @@ const Transfer = () => {
 
     if (fromAccount===toAccount) {
       alert("The two accounts cannot be same.");
+      return;
+    }
+
+    if (amount.trim() === "" || isNaN(amount)) {
+      alert("Amount must be a number.");
       return;
     }
 

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { baseUrl, currentUser, currentToken, removeUser } from "../components/Helpers";
+import { baseUrl, currentUser, currentToken, removeUser, logout } from "../components/Helpers";
 import "./MyAccountsStyles.css";
-import Global from "../components/Global";
 
 
 const MyAccounts = () => {

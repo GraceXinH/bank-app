@@ -1,59 +1,22 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { baseUrl, userName, logout, currentToken, currentUser } from "./Helpers";
+import { userName, logout } from "./Helpers";
 import Global from "./Global";
 
 const Topbar = () => {
 
-  const [ login, setLogin ] = useState(false);
-  const expired = Global.expired;
+  // const [ login, setLogin ] = useState(false);
 
   const handleLogout = (e) => {
     logout();
-    setLogin(false);
+    // setLogin(false);
     window.location = "/";
   }
 
-  function sayHello() {
-    console.log("expired: " + expired);
-    console.log(localStorage.hasOwnProperty('userName'));
-    if (!login) {
-      return;
-    }
-
-    if (!localStorage.hasOwnProperty('userId')) return;
-    var lastStatus;
-
-    fetch(baseUrl() + `/api/greeting`, {
-      "method": "GET",
-      "timeout": 0,
-      "headers": {
-        "Authorization": 'Bearer ' + currentToken()
-      }
-    })
-      .then((resp) => {
-        lastStatus = resp.status;
-        return resp;
-      })
-      .then((data) => {
-        setLogin(true);
-        return;
-      })
-      .catch((err) => {
-        console.log(err);
-        if (lastStatus === 401 || lastStatus === 403) {
-          setLogin(false);
-          return;
-        }
-      });
-    }
   useEffect(() => {
-    if (currentUser!==null) {
-      setLogin(true);
-    }
-    sayHello();
-  }, [login]);
+    // console.log("topbar awake.");
+  }, [Global.expired]);
 
   return (
     <Wrapper>
@@ -63,7 +26,6 @@ const Topbar = () => {
             <NavigationLink to="/">HOME</NavigationLink>
             {localStorage.getItem("userId") !== null && (
               <>
-            {/* <NavigationLink to="/create">CREATE</NavigationLink> */}
             <NavigationLink to="/accounts">ACCOUNTS</NavigationLink>
             <NavigationLink to="/transfer">TRANSFER</NavigationLink>
             

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { removeUser } from "../components/Helpers";
 
 const AccountDetail = () => {
   const [name, setName] = useState(null);
@@ -41,12 +42,13 @@ const AccountDetail = () => {
       setBalance(data.balance);
       setStatus(data.status);
       setOpendate(data.opendate);
-           setMessage(data.message);
+      setMessage(data.message);
     })
     .catch((err) => {
       console.log(err);
-      if (lastStatus===401) {
+      if (lastStatus===401 || lastStatus===403) {
         setMessage("The token maybe expired or invalid, please login again.")
+        removeUser();
         return;
       }
       // console.log("we have a problem " + err.message);
@@ -78,7 +80,7 @@ const AccountDetail = () => {
         <br />
         <Label>OpenDate: {opendate != null ? opendate : ""}</Label>
         <br />
-     
+
         <MessageLabel> {message} </MessageLabel>
 
       </Form>
@@ -149,7 +151,7 @@ const MessageLabel = styled.label`
   font-weight: 300;
   font-size:20px;
   margin-top: 10px;
- `;
+`;
 
 const Button = styled.button`
   position: relative;

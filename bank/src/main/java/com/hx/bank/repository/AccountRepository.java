@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findAllByUser(User user);
 
-    @Query(value = "SELECT COUNT(*) FROM Accounts WHERE userid=:userId and type=:type", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM accounts WHERE userid=:userId and type=:type", nativeQuery = true)
     Long countByUserAndType(int userId, String type);
 
-    @Query(value = "SELECT IFNULL(MAX(id), 0) FROM Accounts ", nativeQuery = true)
+    @Query(value = "SELECT IFNULL(MAX(id), 0) FROM accounts ", nativeQuery = true)
     Long getMaxId();
 
 

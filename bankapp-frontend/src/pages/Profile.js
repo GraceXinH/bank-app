@@ -20,7 +20,6 @@ const Profile = () => {
 
   const retrieveData = () => {
     
-    console.log(token);
     var userId = localStorage.getItem('userId');
     var lastStatus;
 
@@ -80,7 +79,7 @@ const Profile = () => {
           <br />
           <Label>Last Name: {lastname != null ? lastname : ""}</Label>
           <br />
-          <Label>Phone Number: {phone != null ? phone : ""}</Label>
+          <Label>Phone: {phone != null ? phone : ""}</Label>
           <br />
           <Label>Address: {address != null ? address : ""}</Label>
           <br />

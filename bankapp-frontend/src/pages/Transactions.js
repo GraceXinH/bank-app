@@ -30,7 +30,6 @@ const Transactions=()=> {
           if (lastStatus===401 || lastStatus===403) {
             setMessage("The token maybe is expired or invalid, please login again.")
             Global.expired = true;
-            console.log("from trans: " + Global.expired);
             removeUser();
             return;
           }
@@ -38,14 +37,12 @@ const Transactions=()=> {
         })
         .then((data) => {
           setTransactions(data);
-          // console.log(data);
         })
         .catch((err) => {
           console.log(err);
           if (lastStatus===401 || lastStatus===403) {
             setMessage("The token maybe is expired or invalid, please login again.")
             Global.expired = true;
-            console.log("from trans: " + Global.expired);
             removeUser();
             return;
           }

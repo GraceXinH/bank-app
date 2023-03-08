@@ -1,3 +1,4 @@
+import Global from "./Global";
 
 export function baseUrl() {
   return process.env.REACT_APP_.BASE_URL;
@@ -16,6 +17,7 @@ export function removeUser() {
   localStorage.removeItem("userId");
   localStorage.removeItem("userName");
   localStorage.removeItem("token");
+  Global.expired = true;
 }
 
 export function userName() {
@@ -27,4 +29,5 @@ export function logout() {
   localStorage.removeItem("userId");
   localStorage.removeItem("userName");
   localStorage.removeItem("token");
+  Global.expired = true;
 }

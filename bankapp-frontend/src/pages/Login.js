@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router";
 import { baseUrl } from "../components/Helpers";
 import Global from "../components/Global";
 
@@ -10,9 +9,7 @@ const Login = () => {
     localStorage.getItem("Current_User")
   );
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   var lastStatus;
-  var errMsg;
 
 
   const signing_in = (e) => {
@@ -30,7 +27,6 @@ const Login = () => {
     })
       .then((res) => {
         lastStatus = res.status;
-        errMsg = res.msg;
         return res.json();
       })
       .then((data) => {
@@ -43,7 +39,7 @@ const Login = () => {
           localStorage.setItem("token", data.token);
           localStorage.setItem("userId", data.userId);
           localStorage.setItem("userName", data.userName);
-          // navigate("/accounts");
+          Global.expired = false;
           window.location = "/accounts";
         }
       })
@@ -59,7 +55,6 @@ const Login = () => {
           signing_in(e);
         }}
       >
-        {/* <LoginSpan>Login</LoginSpan> */}
 
         <Loginlabel>User Name</Loginlabel>
         <Logininput
@@ -71,7 +66,7 @@ const Login = () => {
         <Loginlabel>Password</Loginlabel>
         <Logininput
           type="password"
-          placeholder="Enter your passwoed ..."
+          placeholder="Enter your password ..."
           onChange={(e) => setPassword(e.target.value)}
         />
 
@@ -93,11 +88,6 @@ const Logindiv = styled.div`
     flex-direction: column-reverse;
   }
 `;
-
-// const LoginSpan = styled.span`
-//   font-size: 50px;
-//   color: white;
-// `;
 
 const Loginform = styled.form`
   margin-top: 20px;

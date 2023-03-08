@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import "./CreateAccountStyles.css";
 import { baseUrl, currentToken, currentUser } from "../components/Helpers";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { removeUser } from "../components/Helpers";
 
 const CreatAccount = () => {
   const [name, setName] = useState("");
   const [type, setType] = useState("CHEQUING");
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
   var lastStatus;
@@ -36,7 +38,11 @@ const CreatAccount = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
+        if (lastStatus===401 || lastStatus===403) {
+          setMessage("The token maybe expired or invalid, please login again.")
+          removeUser();
+          return;
+        }
         if (lastStatus === 501) {
           alert(errMsg);
         }
@@ -103,7 +109,7 @@ const CreatAccount = () => {
           </div>
 
         </div>
-
+        <MessageLabel> {message} </MessageLabel>
       </Creatform>
     </Creatdiv>
   );
@@ -198,6 +204,16 @@ const LoginRegisterButton = styled.button`
   padding: 10px;
   border-radius: 10px;
   color: white;
+`;
+
+const MessageLabel = styled.label`
+  align-items: center;
+  color: white;
+  margin-left: 2px;
+  display: block;
+  font-weight: 300;
+  font-size:20px;
+  margin-top: 10px;
 `;
 
 export default CreatAccount;
