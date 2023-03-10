@@ -54,7 +54,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
                     from transactions 
                     where fromaccount = :accountId 
                         or toaccount= :accountId
-                    """,
-            countQuery = "")
+                    """)
     Integer retrieveTransactionsByAccountId(@Param("accountId") Long accountId);
 }
