@@ -2,7 +2,16 @@
     background-color: var(--back);
     height: auto;
 }
-
+/* .container {
+    margin-top: 2px;
+    align-items: right;
+    background-color: #4CAF50;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+} */
 .table-container {
     overflow-x: auto;
 }
@@ -87,6 +96,7 @@ table td::before {
 }
 
 @media (max-width: 767px) {
+
     table {
         display: block;
         width: 100%;

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { userName, logout } from "./Helpers";
 import Global from "./Global";
 
-const Topbar = () => {
+const Topbar = (expired) => {
 
   // const [ login, setLogin ] = useState(false);
 
@@ -16,7 +16,7 @@ const Topbar = () => {
 
   useEffect(() => {
     // console.log("topbar awake.");
-  }, [Global.expired]);
+  }, []);
 
   return (
     <Wrapper>

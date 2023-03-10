@@ -3,19 +3,24 @@ import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { baseUrl, currentToken, removeUser } from "../components/Helpers";
 import "./TransactionStyles.css";
+import Global from "../components/Global";
+import Pagination from '../components/Pagination';
 
 const Transactions = () => {
 
   const [ transactions, setTransactions ] = useState(null);
-  const { accountId } = useParams();
+  const { accountId, currentPage } = useParams();
   const [ message, setMessage ] = useState(null);
+  const [ total, setTotal ] = useState(null);
+  const [ recordsPerPage ] = useState(10);
+  const pageNumber = parseInt(currentPage) + 1;
 
   const retrieveData = () => {
 
     var lastStatus;
     setMessage("");
 
-    fetch(baseUrl() + `/api/transaction/account/${accountId}?page=0&size=1000`, {
+    fetch(baseUrl() + `/api/transaction/account/p/${accountId}?page=${currentPage}&size=${recordsPerPage}`, {
       "method": "GET",
       "timeout": 0,
       "headers": {
@@ -47,6 +52,44 @@ const Transactions = () => {
 
   };
 
+  const retrievePageCount = () => {
+
+    var lastStatus;
+    setMessage("");
+
+    fetch(baseUrl() + `/api/transaction/account/pages/${accountId}`, {
+      "method": "GET",
+      "timeout": 0,
+      "headers": {
+        "Authorization": 'Bearer ' + currentToken()
+      }
+    })
+      .then((resp) => {
+        lastStatus = resp.status;
+        if (lastStatus === 401 || lastStatus === 403) {
+          setMessage("The token maybe is expired or invalid, please login again.")
+          Global.expired = true;
+          removeUser();
+          return;
+        }
+        return resp.text();
+      })
+      .then((data) => {
+        setTotal(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (lastStatus === 401 || lastStatus === 403) {
+          setMessage("The token maybe is expired or invalid, please login again.")
+          Global.expired = true;
+          removeUser();
+          return;
+        }
+        // console.log("we have a problem " + err.message);
+        setMessage("we have a problem " + err.message);
+      });
+
+  };
 
   const changeDate = (date) => {
     if (date === null) return "-";
@@ -61,6 +104,7 @@ const Transactions = () => {
 
   useEffect(() => {
     retrieveData();
+    retrievePageCount();
   }, []);
 
 
@@ -96,6 +140,15 @@ const Transactions = () => {
                 ))}
               </tbody>
             </table>
+            <div className='container'>
+              <Pagination
+                postsPerPage={recordsPerPage}
+                totalPosts={total}
+                // paginate={paginate}
+                accountId={accountId}
+                currentPage={pageNumber}
+              />
+            </div>
             
           </div>
           <MessageLabel> {message} </MessageLabel>

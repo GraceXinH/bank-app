@@ -88,11 +88,21 @@ const Transfer = () => {
 
       .then((res) => {
         lastStatus = res.status;
+        if (lastStatus === 401 || lastStatus === 403) {
+          setMessage("The token maybe is expired or invalid, please login again.")
+          removeUser();
+          return;
+        }
         errMsg = res.msg;
         return res;
       })
       .then((data) => {
         console.log(data);
+        if (lastStatus === 401 || lastStatus === 403) {
+          setMessage("The token maybe is expired or invalid, please login again.")
+          removeUser();
+          return;
+        }
         if (lastStatus === 501) {
           alert(errMsg);
         }

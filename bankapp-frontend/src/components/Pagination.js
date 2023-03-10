@@ -1,25 +1,25 @@
 import React from 'react';
+import "./PaginationStyles.css";
 
-function Pagination({ currentPage, totalPages, onChangePage }) {
-    const pageNumbers = [];
+const Pagination = ({ postsPerPage, totalPosts, paginate, accountId, currentPage }) => {
+  const pageNumbers = [];
+console.log(currentPage);
+  for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
+    pageNumbers.push(i);
 
-    for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(i);
-    }
+  }
 
-    return (
-        <div>
-            {pageNumbers.map((pageNumber) => (
-                <button
-                    key={pageNumber}
-                    onClick={() => onChangePage(pageNumber)}
-                    disabled={pageNumber === currentPage}
-                >
-                    {pageNumber}
-                </button>
-            ))}
-        </div>
-    );
-}
+  return (
+
+    <div className='pagination'>
+      {pageNumbers.map(number => (
+        <a href={`/transaction/${accountId}/${number - 1}`} className={currentPage===number?"page-link active":"page-link"}>
+          {number}
+        </a>
+      ))}
+    </div>
+
+  );
+};
 
 export default Pagination;

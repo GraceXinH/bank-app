@@ -22,18 +22,18 @@ const App = () => {
     <div>
       <Router>
 
-          <Topbar />
+          <Topbar expired={Global.expired} />
           <Routes>
 
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/accounts" element={<MyAccounts />} />
+            <Route path="/accounts" element={<MyAccounts />}/>
             <Route path="/transfer" element={<Transfer />} />
             <Route path="/create" element={<CreatAccount />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/transaction/:accountId" element={<Transactions />} />
+            <Route path="/transaction/:accountId/:currentPage" element={<Transactions />} />
             <Route path="/accountDetail/:accountId" element={<AccountDetail />} />
 
           </Routes>

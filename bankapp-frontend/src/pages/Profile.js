@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import { baseUrl, currentToken, currentUser } from "../components/Helpers";
+import { baseUrl, currentToken, currentUser, removeUser } from "../components/Helpers";
 import "./ProfileStyles.css";
 
 
@@ -48,8 +48,9 @@ const Profile = () => {
     })
     .catch((err) => {
       console.log(err);
-      if (lastStatus===401) {
-        setMessage("The token maybe is expired or invalid, please login again.")
+      if (lastStatus===401 || lastStatus===403) {
+        setMessage("The token maybe is expired or invalid, please login again.");
+        removeUser();
         return;
       }
       // console.log("we have a problem " + err.message);
