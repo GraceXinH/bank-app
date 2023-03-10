@@ -48,5 +48,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
             countQuery = "select count(*) from transactions where fromaccount = :accountId or toaccount= :accountId")
     List<TransactionSet> retrieveTransactionsByAccountId(@Param("accountId") Long accountId, Pageable pageable);
 
-
+    @Query(nativeQuery = true,
+            value = """
+                    select count(*) 
+                    from transactions 
+                    where fromaccount = :accountId 
+                        or toaccount= :accountId
+                    """,
+            countQuery = "")
+    Integer retrieveTransactionsByAccountId(@Param("accountId") Long accountId);
 }

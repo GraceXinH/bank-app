@@ -186,4 +186,12 @@ public class BankServiceImpl implements BankService {
         return "hello";
     }
 
+    @Override
+    public Integer retrieveTransactionsPagesByAccountId(Long accountId) {
+        Account account = accountRepository.findById(accountId).orElseThrow();
+        if (!account.getUser().getLoginname().equals(currentUserLoginName()))
+            throw new NoAccessException();
+        return transactionRepository.retrieveTransactionsByAccountId(accountId);
+    }
+
 }

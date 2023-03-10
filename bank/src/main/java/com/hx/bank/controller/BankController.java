@@ -73,6 +73,12 @@ public class BankController {
         return service.displayTransactionsByAccountId(accountId, page, size);
     }
 
+    @GetMapping("/transaction/account/pages/{accountId}")
+    public Integer displayTransactionsPagesCount(@PathVariable Long accountId) {
+
+        return service.retrieveTransactionsPagesByAccountId(accountId);
+    }
+
     @GetMapping("/greeting")
     public String sayHello() {
 

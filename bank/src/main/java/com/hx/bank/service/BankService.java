@@ -28,4 +28,6 @@ public interface BankService {
     Transaction depositOrWithdraw(Operation operation);
 
     String sayHello();
+
+    Integer retrieveTransactionsPagesByAccountId(Long accountId);
 }
