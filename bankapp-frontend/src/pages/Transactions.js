@@ -9,6 +9,7 @@ const Transactions = () => {
 
   const [transactions, setTransactions] = useState(null);
   const { accountId } = useParams();
+  const { accountNumber } = useParams();
   const [message, setMessage] = useState(null);
   const { expired, setExpired } = useContext(UserContext);
 
@@ -70,7 +71,7 @@ const Transactions = () => {
   return (
     <Wrapper className="wrapper">
       <FormDiv>
-        <Form>
+        <Content>
           <Mydiv>Transactions</Mydiv>
           <div className="tableContainer">
             <table >
@@ -90,7 +91,11 @@ const Transactions = () => {
                   <tr key={transaction.id}>
                     <td data-label="ID">{transaction.id}</td>
                     <td data-label="Type">{transaction.type}</td>
-                    <td data-label="Amount">{transaction.amount}</td>
+                    <td data-label="Amount">{
+                      ((transaction.type === "DEPOSIT") ||
+                        (transaction.type === "TRANS" && (transaction.toAccount !== null && parseFloat(transaction.toAccount) === parseFloat(accountNumber)))) ?
+                        transaction.amount : <font color="red">{(0 - transaction.amount)}</font>
+                    }</td>
                     <td data-label="Date">{changeDate(transaction.transactiondate)}</td>
                     <td data-label="From">{transaction.fromAccount}</td>
                     <td data-label="To">{transaction.toAccount === null ? "-" : transaction.toAccount}</td>
@@ -103,7 +108,7 @@ const Transactions = () => {
           </div>
           <MessageLabel> {message} </MessageLabel>
 
-        </Form>
+        </Content>
       </FormDiv>
 
 
@@ -141,7 +146,7 @@ const FormDiv = styled.div`
     }
 `;
 
-const Form = styled.form`
+const Content = styled.div`
   height: 350px;
   width: 100%;
   border-radius: 10px;
@@ -168,7 +173,7 @@ const MessageLabel = styled.label`
   font-weight: 300;
   font-size:20px;
   margin-top: 160px;
- `;
+`;
 
 
 

@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { baseUrl, currentUser, currentToken, removeUser } from "../components/Helpers";
 import "./MyAccountsStyles.css";
-import Global from "../components/Global";
 
 
 const MyAccounts = () => {
@@ -50,7 +49,8 @@ const MyAccounts = () => {
   };
 
   const transactionRoute = (e) => {
-    let path = `/transaction/${e.currentTarget.dataset.id}/0`;
+    e.preventDefault();
+    let path = `/transaction/${e.currentTarget.dataset.id}/${e.currentTarget.dataset.number}/0`;
     navigate(path);
   }
 
@@ -158,7 +158,7 @@ const MyAccounts = () => {
                     <td data-label="Actions">
                       <button className="button button2" onClick={operation.bind(this)} data-id={account.id} data-action="DEPOSIT">Deposit</button>
                       <button className="button button5" onClick={operation.bind(this)} data-id={account.id} data-action="WITHDRAW">Withdraw</button>
-                      <button className="button button5" onClick={transactionRoute.bind(this)} data-id={account.id} data-action="WITHDRAW">Transaction</button>
+                      <button className="button button5" onClick={transactionRoute.bind(this)} data-id={account.id} data-number={account.number} data-action="WITHDRAW">Transaction</button>
 
                     </td>
                   </tr>

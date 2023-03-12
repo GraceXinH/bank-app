@@ -1,9 +1,9 @@
 import React from 'react';
 import "./PaginationStyles.css";
 
-const Pagination = ({ postsPerPage, totalPosts, paginate, accountId, currentPage }) => {
+const Pagination = ({ postsPerPage, totalPosts, paginate, accountId, currentPage, accountNumber }) => {
   const pageNumbers = [];
-console.log(currentPage);
+
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i);
 
@@ -13,7 +13,7 @@ console.log(currentPage);
 
     <div className='pagination'>
       {pageNumbers.map(number => (
-        <a href={`/transaction/${accountId}/${number - 1}`} className={currentPage===number?"page-link active":"page-link"}>
+        <a href={`/transaction/${accountId}/${accountNumber}/${number - 1}`} className={currentPage === number ? "page-link active" : "page-link"}>
           {number}
         </a>
       ))}

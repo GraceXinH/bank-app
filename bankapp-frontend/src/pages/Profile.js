@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import { baseUrl, currentToken, currentUser, removeUser } from "../components/Helpers";
+import { baseUrl, removeUser } from "../components/Helpers";
 import "./ProfileStyles.css";
 import { UserContext } from "../components/UserContext";
 
@@ -65,10 +65,6 @@ const Profile = () => {
     retrieveData();
   }, []);
 
-
-
-
-
   return (
 
     <Wrapper>
@@ -106,21 +102,6 @@ const Mydiv = styled.div`
   margin-bottom: 30px;
   font-size: 22px;
   
-`;
-
-const Mytr = styled.tr`
-justify-content: space-around;
-margin-left:20px;
-color:white;
-align-items: center;
-font-size: 18px;
-`;
-
-const Mytd = styled.td`
-color:white;
-justify-content: space-around;
-padding: 10px;
-
 `;
 
 const Wrapper = styled.div`
@@ -178,7 +159,7 @@ const MessageLabel = styled.label`
   font-weight: 300;
   font-size:20px;
   margin-top: 160px;
- `;
+`;
 
 const Button = styled.button`
   position: relative;

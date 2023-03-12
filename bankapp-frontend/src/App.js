@@ -34,7 +34,7 @@ const App = () => {
             <Route path="/transfer" element={<Transfer />} />
             <Route path="/create" element={<CreatAccount />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/transaction/:accountId/:currentPage" element={<Transactions />} />
+            <Route path="/transaction/:accountId/:accountNumber/:currentPage" element={<Transactions />} />
 
           </Routes>
         </UserContext.Provider>
