@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { baseUrl, currentToken, removeUser } from "../components/Helpers";
 import "./TransactionStyles.css";
 import Global from "../components/Global";
 import Pagination from '../components/Pagination';
+import { UserContext } from "../components/UserContext";
 
 const Transactions = () => {
 
-  const [ transactions, setTransactions ] = useState(null);
+  const [transactions, setTransactions] = useState(null);
   const { accountId, currentPage } = useParams();
-  const [ message, setMessage ] = useState(null);
-  const [ total, setTotal ] = useState(null);
-  const [ recordsPerPage ] = useState(10);
+  const [message, setMessage] = useState(null);
+  const [total, setTotal] = useState(null);
+  const [recordsPerPage] = useState(10);
   const pageNumber = parseInt(currentPage) + 1;
+  const { expired, setExpired } = useContext(UserContext);
 
   const retrieveData = () => {
 
@@ -32,6 +34,7 @@ const Transactions = () => {
         if (lastStatus === 401 || lastStatus === 403) {
           setMessage("The token maybe is expired or invalid, please login again.")
           removeUser();
+          setExpired(true);
           return;
         }
         return resp.json();
@@ -149,7 +152,7 @@ const Transactions = () => {
                 currentPage={pageNumber}
               />
             </div>
-            
+
           </div>
           <MessageLabel> {message} </MessageLabel>
 

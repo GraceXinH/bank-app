@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { baseUrl, currentToken, currentUser, removeUser } from "../components/Helpers";
 import "./ProfileStyles.css";
+import { UserContext } from "../components/UserContext";
 
 
 const Profile = () => {
@@ -11,51 +12,52 @@ const Profile = () => {
   const [firstname, setFirstname] = useState();
   const [lastname, setLastname] = useState(null);
   const [address, setAddress] = useState(null);
-  const [phone,setPhone] = useState(null);
-  const [opendate,setOpendate] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [opendate, setOpendate] = useState(null);
 
   const [message, setMessage] = useState(null);
   const token = localStorage.getItem('token');
-
+  const { expired, setExpired } = useContext(UserContext);
 
   const retrieveData = () => {
-    
+
     var userId = localStorage.getItem('userId');
     var lastStatus;
 
     fetch(baseUrl() + `/api/user/${userId}`, {
       "method": "GET",
       "timeout": 0,
-      "headers": { 
+      "headers": {
         "Authorization": 'Bearer ' + token
       }
     })
-    .then((resp) => {
-      lastStatus = resp.status;
-      return resp.json();
-    })
-    .then((data) => {
-      setLoginname(data.loginname);
-      setFirstname(data.firstname);
-      setLastname(data.lastname);
-      setPassword(data.password);
-      setAddress(data.address);
-      setPhone(data.phone);
-      setOpendate(data.opendate);
-      setMessage(data.message);
+      .then((resp) => {
+        lastStatus = resp.status;
+        return resp.json();
+      })
+      .then((data) => {
+        setLoginname(data.loginname);
+        setFirstname(data.firstname);
+        setLastname(data.lastname);
+        setPassword(data.password);
+        setAddress(data.address);
+        setPhone(data.phone);
+        setOpendate(data.opendate);
+        setMessage(data.message);
 
 
-    })
-    .catch((err) => {
-      console.log(err);
-      if (lastStatus===401 || lastStatus===403) {
-        setMessage("The token maybe is expired or invalid, please login again.");
-        removeUser();
-        return;
-      }
-      // console.log("we have a problem " + err.message);
-      setMessage("we have a problem " + err.message);
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+        if (lastStatus === 401 || lastStatus === 403) {
+          setMessage("The token maybe is expired or invalid, please login again.");
+          removeUser();
+          setExpired(true);
+          return;
+        }
+        // console.log("we have a problem " + err.message);
+        setMessage("we have a problem " + err.message);
+      });
 
   };
 
@@ -64,8 +66,8 @@ const Profile = () => {
   }, []);
 
 
- 
-  
+
+
 
   return (
 

@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../components/UserContext";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { baseUrl, currentUser, currentToken, removeUser } from "../components/Helpers";
 import "./MyAccountsStyles.css";
+import Global from "../components/Global";
 
 
 const MyAccounts = () => {
   const [accounts, setAccounts] = useState(null);
   const [message, setMessage] = useState(null);
+  const { expired, setExpired } = useContext(UserContext);
   const navigate = useNavigate();
 
   function retrieveData() {
@@ -52,13 +55,14 @@ const MyAccounts = () => {
   }
 
   const createAccountRoute = (e) => {
+    e.preventDefault();
     let path = `/create`;
     navigate(path);
   }
 
   useEffect(() => {
     retrieveData();
-  }, []);
+  }, [expired]);
 
   function operation(e) {
     e.preventDefault();
@@ -106,6 +110,7 @@ const MyAccounts = () => {
         if (data.status === 401 || data.status === 403) {
           removeUser();
           data.text().then((result) => alert(result));
+          setExpired(true);
           return;
         }
         alert("Operation succeeded.");

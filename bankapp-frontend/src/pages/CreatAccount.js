@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import "./CreateAccountStyles.css";
 import { baseUrl, currentToken, currentUser } from "../components/Helpers";
 import { useNavigate } from "react-router-dom";
 import { removeUser } from "../components/Helpers";
+import { UserContext } from "../components/UserContext";
 
 const CreatAccount = () => {
   const [name, setName] = useState("");
   const [type, setType] = useState("CHEQUING");
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
+  const { expired, setExpired } = useContext(UserContext);
 
   var lastStatus;
   var errMsg;
-  
+
   const creatNewAccount = (e) => {
     e.preventDefault();
 
@@ -38,9 +40,10 @@ const CreatAccount = () => {
         return res.json();
       })
       .then((data) => {
-        if (lastStatus===401 || lastStatus===403) {
+        if (lastStatus === 401 || lastStatus === 403) {
           setMessage("The token maybe expired or invalid, please login again.")
           removeUser();
+          setExpired(true);
           return;
         }
         if (lastStatus === 501) {
@@ -103,7 +106,10 @@ const CreatAccount = () => {
             </div>
             <div className="col-75 buttonRight">
               <CreatButton type="submit">Open</CreatButton>
-              <BackButton type="button" onClick={() => navigate("/accounts")}>Back</BackButton>
+              <BackButton type="button" onClick={(e) => {
+                e.preventDefault();
+                navigate("/accounts")
+              }}>Back</BackButton>
 
             </div>
           </div>

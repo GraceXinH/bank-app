@@ -2,7 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { removeUser } from "../components/Helpers";
+import { baseUrl, removeUser } from "../components/Helpers";
+import { UserContext } from "../components/UserContext";
 
 const AccountDetail = () => {
   const [name, setName] = useState(null);
@@ -13,6 +14,8 @@ const AccountDetail = () => {
   const [status, setStatus] = useState(null);
   const [message, setMessage] = useState(null);
   const { accountId } = useParams();
+  const { expired, setExpired } = useContext(UserContext);
+
 
   // const { token } = useContext(UserConstext);
   const token = localStorage.getItem('token');
@@ -20,40 +23,40 @@ const AccountDetail = () => {
 
   const retrieveData = () => {
     // const user = JSON.parse(localStorage.getItem('user'));
-    
+
     console.log(token);
     var lastStatus;
 
-    fetch(`http://localhost:8080/api/account/${accountId}`, {
+    fetch(baseUrl + `/api/account/${accountId}`, {
       "method": "GET",
       "timeout": 0,
-      "headers": { 
+      "headers": {
         "Authorization": 'Bearer ' + token
       }
     })
-    .then((resp) => {
-      lastStatus = resp.status;
-      return resp.json();
-    })
-    .then((data) => {
-      setName(data.name);
-      setNumber(data.number);
-      setType(data.type);
-      setBalance(data.balance);
-      setStatus(data.status);
-      setOpendate(data.opendate);
-      setMessage(data.message);
-    })
-    .catch((err) => {
-      console.log(err);
-      if (lastStatus===401 || lastStatus===403) {
-        setMessage("The token maybe expired or invalid, please login again.")
-        removeUser();
-        return;
-      }
-      // console.log("we have a problem " + err.message);
-      setMessage("we have a problem " + err.message);
-    });
+      .then((resp) => {
+        lastStatus = resp.status;
+        return resp.json();
+      })
+      .then((data) => {
+        setName(data.name);
+        setNumber(data.number);
+        setType(data.type);
+        setBalance(data.balance);
+        setStatus(data.status);
+        setOpendate(data.opendate);
+        setMessage(data.message);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (lastStatus === 401 || lastStatus === 403) {
+          setMessage("The token maybe expired or invalid, please login again.")
+          removeUser();
+          return;
+        }
+        // console.log("we have a problem " + err.message);
+        setMessage("we have a problem " + err.message);
+      });
 
   };
 
@@ -64,30 +67,30 @@ const AccountDetail = () => {
 
   return (
     <Wrapper>
-    <FormDiv>
-      <Form>
-        <Mydiv>Your Account Detailes</Mydiv>
-        <br />
-        <Label>Name: {name != null ? name : ""}</Label>
-        <br />
-        <Label>Namber: {number != null ? number : ""}</Label>
-        <br />
-        <Label>Type: {type != null ? type : ""}</Label>
-        <br />
-        <Label>Balance: {balance != null ? balance : ""}</Label>
-        <br />
-        <Label>Status: {status != null ? status : ""}</Label>
-        <br />
-        <Label>OpenDate: {opendate != null ? opendate : ""}</Label>
-        <br />
+      <FormDiv>
+        <Form>
+          <Mydiv>Your Account Detailes</Mydiv>
+          <br />
+          <Label>Name: {name != null ? name : ""}</Label>
+          <br />
+          <Label>Namber: {number != null ? number : ""}</Label>
+          <br />
+          <Label>Type: {type != null ? type : ""}</Label>
+          <br />
+          <Label>Balance: {balance != null ? balance : ""}</Label>
+          <br />
+          <Label>Status: {status != null ? status : ""}</Label>
+          <br />
+          <Label>OpenDate: {opendate != null ? opendate : ""}</Label>
+          <br />
 
-        <MessageLabel> {message} </MessageLabel>
+          <MessageLabel> {message} </MessageLabel>
 
-      </Form>
-    </FormDiv>
-  </Wrapper>
+        </Form>
+      </FormDiv>
+    </Wrapper>
 
-)
+  )
 }
 
 const Mydiv = styled.div`

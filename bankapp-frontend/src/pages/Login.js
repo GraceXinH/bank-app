@@ -1,16 +1,20 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../components/UserContext";
+import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { baseUrl } from "../components/Helpers";
 import Global from "../components/Global";
 
 const Login = () => {
+  const { expired, setExpired } = useContext(UserContext);
+
   const [loginname, setLoginname] = useState(
     localStorage.getItem("Current_User")
   );
   const [password, setPassword] = useState("");
   var lastStatus;
-
+  const navigate = useNavigate();
 
   const signing_in = (e) => {
     e.preventDefault();
@@ -30,7 +34,7 @@ const Login = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (lastStatus === 500) {
           alert("Please check your login name and password.");
         }
@@ -40,7 +44,8 @@ const Login = () => {
           localStorage.setItem("userId", data.userId);
           localStorage.setItem("userName", data.userName);
           Global.expired = false;
-          window.location = "/accounts";
+          setExpired(false);
+          navigate("/accounts");
         }
       })
       .catch((err) => {
@@ -59,7 +64,7 @@ const Login = () => {
         <Loginlabel>User Name</Loginlabel>
         <Logininput
           type="text"
-          value={loginname!==null ? loginname : ""}
+          value={loginname !== null ? loginname : ""}
           onChange={(e) => setLoginname(e.target.value)}
         />
 

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import { baseUrl, currentToken, currentUser, removeUser } from "../components/Helpers";
 import "./TransferStyles.css";
+import { UserContext } from '../components/UserContext';
 
 const Transfer = () => {
   const [message, setMessage] = useState(null);
@@ -12,12 +13,12 @@ const Transfer = () => {
   const [toAccount, setToAccount] = useState([]);
   const [amount, setAmount] = useState();
   const navigate = useNavigate();
-
+  const { expired, setExpired } = useContext(UserContext);
 
   useEffect(() => {
     var lastStatus;
 
-    if (currentUser()===null) {
+    if (currentUser() === null) {
       navigate("/");
     }
 
@@ -36,11 +37,11 @@ const Transfer = () => {
         setFromAccounts(result);
         setToAccounts(result);
       })
-      .catch((err) => {        
-        if (lastStatus === 401 || lastStatus===403) {
+      .catch((err) => {
+        if (lastStatus === 401 || lastStatus === 403) {
           setMessage("The token maybe expired or invalid, please login again.")
           removeUser();
-          // window.location = "/";
+          setExpired(true);
           return;
         }
         console.log(err);
@@ -56,7 +57,7 @@ const Transfer = () => {
 
     e.preventDefault();
 
-    if (fromAccount===toAccount) {
+    if (fromAccount === toAccount) {
       alert("The two accounts cannot be same.");
       return;
     }
@@ -69,20 +70,20 @@ const Transfer = () => {
     fetch(baseUrl() + "/api/transfer", {
       "method": "POST",
       "timeout": 0,
-      "headers": { 
+      "headers": {
         "Authorization": 'Bearer ' + currentToken(),
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         "fromaccount": {
-            "id": fromAccount
+          "id": fromAccount
         },
         "toaccount": {
-            "id": toAccount
+          "id": toAccount
         },
         "type": "TRANS",
         "amount": amount
-    }),
+      }),
 
     })
 
@@ -93,18 +94,16 @@ const Transfer = () => {
           removeUser();
           return;
         }
-        errMsg = res.msg;
-        return res;
+        return res.text();
       })
       .then((data) => {
-        console.log(data);
         if (lastStatus === 401 || lastStatus === 403) {
           setMessage("The token maybe is expired or invalid, please login again.")
           removeUser();
           return;
         }
         if (lastStatus === 501) {
-          alert(errMsg);
+          alert(data);
         }
         if (lastStatus === 201) {
           alert("Amount is Transfered.");
@@ -123,12 +122,11 @@ const Transfer = () => {
         onSubmit={(e) => {
           transferAmount(e);
         }}>
-          <div className="single">Transfer</div>
+        <div className="single">Transfer</div>
 
         <Wrap
           placeholder="Choose source"
           onChange={(ev) => {
-            console.log(ev.target.value);
             setFromAccount(ev.target.value);
           }}
         >
@@ -146,7 +144,6 @@ const Transfer = () => {
           placeholder="Choose destination"
           onChange={(ev) => {
             setToAccount(ev.target.value);
-            console.log('toAccount'+ ev.target.value)
           }}
         >
           <Item key="-1" value="-1">To Account</Item>

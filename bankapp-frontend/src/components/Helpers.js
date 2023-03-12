@@ -13,7 +13,6 @@ export function currentToken() {
 }
 
 export function removeUser() {
-  console.log("remove");
   localStorage.removeItem("userId");
   localStorage.removeItem("userName");
   localStorage.removeItem("token");

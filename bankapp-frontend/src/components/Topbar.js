@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
+import { UserContext } from "./UserContext";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { userName, logout } from "./Helpers";
-import Global from "./Global";
 
-const Topbar = (expired) => {
+const Topbar = () => {
 
-  // const [ login, setLogin ] = useState(false);
+  const { expired, setExpired } = useContext(UserContext);
 
   const handleLogout = (e) => {
     logout();
@@ -15,8 +15,8 @@ const Topbar = (expired) => {
   }
 
   useEffect(() => {
-    // console.log("topbar awake.");
-  }, []);
+
+  }, [expired]);
 
   return (
     <Wrapper>
@@ -26,10 +26,10 @@ const Topbar = (expired) => {
             <NavigationLink to="/">HOME</NavigationLink>
             {localStorage.getItem("userId") !== null && (
               <>
-            <NavigationLink to="/accounts">ACCOUNTS</NavigationLink>
-            <NavigationLink to="/transfer">TRANSFER</NavigationLink>
-            
-            </>
+                <NavigationLink to="/accounts">ACCOUNTS</NavigationLink>
+                <NavigationLink to="/transfer">TRANSFER</NavigationLink>
+
+              </>
             )}
           </LiDiv>
         </NavigationList>
@@ -38,19 +38,19 @@ const Topbar = (expired) => {
       <TopRight>
         <NavigationList>
           <LeftLiDiv>
-            {(localStorage.hasOwnProperty('userId')) && !Global.expired ? (
+            {(localStorage.hasOwnProperty('userId') && (expired === null || !expired)) ? (
               <>
-              <NavigationLink to="/profile">Welcome {userName()}!</NavigationLink>
-              <button onClick={handleLogout}>Logout</button></>
-
+                <NavigationLink to="/profile">Welcome {userName()}!</NavigationLink>
+                <button onClick={handleLogout}>Logout</button>
+              </>
             ) : (<>
               <NavigationLink to="/Register"> Register</NavigationLink>
               <NavigationLink to="/Login">Login</NavigationLink>
-              </>
+            </>
             )}
           </LeftLiDiv>
 
-          
+
         </NavigationList>
       </TopRight>
     </Wrapper>
